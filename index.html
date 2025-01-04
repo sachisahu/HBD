@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday SMP!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js/dist/index.min.js"></script>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .balloon {
+            position: relative;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(circle at center, #ffafcc, #ff8fa3);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 3s ease-in-out infinite;
+            box-shadow: inset -10px -10px 20px rgba(255, 255, 255, 0.5), inset 10px 10px 20px rgba(255, 192, 203, 0.5);
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 40px;
+            background: #ff8fa3;
+        }
+    </style>
+</head>
+<body class="bg-pink-100 min-h-screen flex items-center justify-center">
+    <div class="text-center p-8 rounded-lg shadow-lg bg-pink-50 max-w-2xl">
+        <div class="relative">
+            <!-- Balloons -->
+            <div class="absolute -top-16 left-8 balloon"></div>
+            <div class="absolute -top-20 right-16 balloon"></div>
+        </div>
+
+        <!-- Image -->
+        <div class="relative mb-6">
+            <img 
+                src="https://via.placeholder.com/150" 
+                alt="SMP" 
+                class="w-40 h-40 rounded-full mx-auto shadow-lg">
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white text-sm px-4 py-2 rounded-full">
+                SMP
+            </div>
+        </div>
+
+        <!-- Birthday Message -->
+        <h1 class="text-4xl font-bold text-pink-600 mb-4">Happy Birthday, SMP!</h1>
+        <p class="text-lg text-pink-700 mb-6">Wishing you a day filled with love, laughter, and joy as you celebrate your special day!</p>
+
+        <!-- Age Spinner -->
+        <div class="flex items-center justify-center mb-6">
+            <div class="relative w-16 h-16 border-4 border-pink-500 rounded-full animate-spin">
+                <div class="absolute inset-0 flex items-center justify-center text-pink-700 font-bold">
+                    23
+                </div>
+            </div>
+        </div>
+
+        <!-- Romantic Wish -->
+        <p class="text-md text-pink-600 italic mb-6">“Every moment with you is like a beautiful dream come true. Here's to many more cherished memories together!”</p>
+
+        <!-- Balloons Eruption -->
+        <div class="relative">
+            <div class="absolute -top-24 left-16 balloon"></div>
+            <div class="absolute -top-32 right-20 balloon"></div>
+            <div class="absolute -top-20 left-32 balloon"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-6">
+            <button 
+                id="celebrate-button" 
+                class="bg-pink-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-pink-600">
+                Celebrate Together 🎉
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('celebrate-button').addEventListener('click', function() {
+            const confettiSettings = { target: 'confetti-canvas', max: 150, size: 1.2, animate: true };
+            const confetti = new ConfettiGenerator(confettiSettings);
+            confetti.render();
+
+            // Optional: Stop confetti after 5 seconds
+            setTimeout(() => {
+                confetti.clear();
+            }, 5000);
+        });
+    </script>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+</body>
+</html>
