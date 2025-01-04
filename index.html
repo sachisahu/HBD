@@ -7,26 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/confetti-js/dist/index.min.js"></script>
     <style>
+        /* Balloon float animation */
         @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0);
-            }
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
         }
 
         .balloon {
             position: relative;
-            width: 60px;
-            height: 80px;
-            background: radial-gradient(circle at center, #ffafcc, #ff8fa3);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: float 3s ease-in-out infinite;
-            box-shadow: inset -10px -10px 20px rgba(255, 255, 255, 0.5), inset 10px 10px 20px rgba(255, 192, 203, 0.5);
+            width: 70px;
+            height: 90px;
+            background: radial-gradient(circle at 35% 25%, rgba(244, 114, 182, 1), rgba(244, 114, 182, 0.9) 70%, rgba(244, 114, 182, 0.8));
+            border-radius: 50%;
+            box-shadow: inset -8px -8px 16px rgba(255, 255, 255, 0.6),
+                        4px 4px 12px rgba(0, 0, 0, 0.2);
+            animation: float 5s ease-in-out infinite;
         }
 
         .balloon::after {
@@ -35,78 +31,279 @@
             bottom: -20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 4px;
-            height: 40px;
-            background: #ff8fa3;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+            animation: sway 2s ease-in-out infinite alternate;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 30%;
+            width: 15px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            animation: shimmer 2s linear infinite;
+        }
+
+        /* Dice Timer Styling */
+        .odometer {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #F472B6; /* Medium Pink Color */
+        }
+
+        .digit {
+            position: relative;
+            width: 80px;
+            height: 100px;
+            background-color: #F472B6; /* Medium Pink Color */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            transform-style: preserve-3d;
+            perspective: 500px;
+        }
+
+        .digit span {
+            position: absolute;
+            backface-visibility: hidden;
+            font-size: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .digit span.front {
+            transform: rotateX(0deg);
+        }
+
+        .digit span.back {
+            transform: rotateX(180deg);
+        }
+
+        /* Slow Dice Animation */
+        @keyframes rollDice {
+            0% {
+                transform: rotateX(0deg);
+            }
+            100% {
+                transform: rotateX(360deg);
+            }
+        }
+
+        .dice-rotate {
+            animation: rollDice 1s ease-in-out; /* Slower and smoother animation */
+        }
+
+        /* Image transition */
+        .image-container {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .image-container img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .image-container img.visible {
+            opacity: 1;
+        }
+
+        /* For confetti */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Button styles */
+        .button {
+            background-color: #F472B6; /* Medium Pink Color */
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #EC4899; /* Slightly darker pink on hover */
+        }
+
+        .celebrate-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
         }
     </style>
 </head>
-<body class="bg-pink-100 min-h-screen flex items-center justify-center">
-    <div class="text-center p-8 rounded-lg shadow-lg bg-pink-50 max-w-2xl">
-        <div class="relative">
-            <!-- Balloons -->
-            <div class="absolute -top-16 left-8 balloon"></div>
-            <div class="absolute -top-20 right-16 balloon"></div>
-        </div>
+<body class="bg-pink-50 min-h-screen flex items-center justify-center">
 
-        <!-- Image -->
-        <div class="relative mb-6">
-            <img 
-                src="https://via.placeholder.com/150" 
-                alt="SMP" 
-                class="w-40 h-40 rounded-full mx-auto shadow-lg">
-            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white text-sm px-4 py-2 rounded-full">
-                SMP
-            </div>
+    <div class="text-center p-8 rounded-lg shadow-lg bg-white max-w-2xl relative">
+        <!-- Balloons -->
+        <div class="absolute -top-16 left-8 balloon"></div>
+        <div class="absolute -top-24 right-12 balloon"></div>
+        <div class="absolute -top-12 left-24 balloon"></div>
+        <div class="absolute -top-26 left-48 balloon"></div>
+        <div class="absolute -top-26 right-48 balloon"></div>
+        <div class="absolute -top-20 right-20 balloon"></div>
+
+        <!-- Image Container for Changing Images -->
+        <div class="image-container mb-6">
+            <img src="https://iili.io/2UTz744.jpg" alt="Image 3" class="image-slide visible" id="image1">
+            <img src="https://iili.io/2UTC0Xf.jpg" alt="Image 2" class="image-slide" id="image2">
+            <img src="https://iili.io/2UTKKwx.jpg" alt="Image 1" class="image-slide" id="image3">
+
+            
         </div>
 
         <!-- Birthday Message -->
         <h1 class="text-4xl font-bold text-pink-600 mb-4">Happy Birthday, SMP!</h1>
         <p class="text-lg text-pink-700 mb-6">Wishing you a day filled with love, laughter, and joy as you celebrate your special day!</p>
 
-        <!-- Age Spinner -->
-        <div class="flex items-center justify-center mb-6">
-            <div class="relative w-16 h-16 border-4 border-pink-500 rounded-full animate-spin">
-                <div class="absolute inset-0 flex items-center justify-center text-pink-700 font-bold">
-                    23
-                </div>
+        <!-- Odometer Timer -->
+        <div class="mb-6">
+            <p class="text-lg text-pink-600 mb-2">Time left until your birthday:</p>
+            <div id="odometer" class="odometer">
+                <div class="digit" id="hours"></div>
+                <div class="digit" id="minutes"></div>
+                <div class="digit" id="seconds"></div>
             </div>
         </div>
 
         <!-- Romantic Wish -->
-        <p class="text-md text-pink-600 italic mb-6">“Every moment with you is like a beautiful dream come true. Here's to many more cherished memories together!”</p>
+        <p class="text-md text-pink-600 italic mb-6">“Wishing you a wonderful birthday filled with joy and happiness. Hope you have an amazing year ahead!”</p>
 
-        <!-- Balloons Eruption -->
-        <div class="relative">
-            <div class="absolute -top-24 left-16 balloon"></div>
-            <div class="absolute -top-32 right-20 balloon"></div>
-            <div class="absolute -top-20 left-32 balloon"></div>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-6">
-            <button 
-                id="celebrate-button" 
-                class="bg-pink-500 text-white px-6 py-2 rounded-lg shadow-lg hover:bg-pink-600">
+        <!-- Celebrate Button -->
+        <div class="celebrate-button">
+            <button id="celebrate-button" class="button">
                 Celebrate Together 🎉
             </button>
         </div>
     </div>
 
     <script>
-        document.getElementById('celebrate-button').addEventListener('click', function() {
+        // Birthday date setup
+        const birthdayDate = new Date('2025-01-05T00:00:00');
+
+        let lastHour = -1;
+        let lastMinute = -1;
+        let lastSecond = -1;
+
+        // Image Rotator Logic
+        let currentImageIndex = 0;
+        const images = document.querySelectorAll('.image-container img');
+
+        function changeImage() {
+            images[currentImageIndex].classList.remove('visible');
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            images[currentImageIndex].classList.add('visible');
+        }
+
+        setInterval(changeImage, 3500); // Change image every 3.5 seconds
+
+        function formatTime(ms) {
+            const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            return {
+                hours: hours,
+                minutes: minutes,
+                seconds: seconds
+            };
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const timeRemaining = birthdayDate - now;
+
+            if (timeRemaining > 0) {
+                const time = formatTime(timeRemaining);
+
+                // Update digits for each unit (hours, minutes, seconds)
+                if (time.hours !== lastHour) {
+                    lastHour = time.hours;
+                    updateDigit("hours", time.hours);
+                }
+
+                if (time.minutes !== lastMinute) {
+                    lastMinute = time.minutes;
+                    updateDigit("minutes", time.minutes);
+                }
+
+                if (time.seconds !== lastSecond) {
+                    lastSecond = time.seconds;
+                    updateDigit("seconds", time.seconds);
+                }
+            } else {
+                document.getElementById('odometer').innerHTML = "It's your birthday!";
+                triggerConfetti();
+            }
+        }
+
+        function updateDigit(id, newValue) {
+            const digitElement = document.getElementById(id);
+            const currentValue = digitElement.textContent || "0";
+
+            if (currentValue !== newValue.toString().padStart(2, '0')) {
+                digitElement.innerHTML = `
+                    <span class="front">${currentValue}</span>
+                    <span class="back">${newValue}</span>
+                `;
+                digitElement.classList.add("dice-rotate");
+                setTimeout(() => {
+                    digitElement.classList.remove("dice-rotate");
+                    digitElement.innerHTML = `<span class="front">${newValue}</span>`;
+                }, 1000);  // Slower Dice flip duration
+            }
+        }
+
+        function triggerConfetti() {
             const confettiSettings = { target: 'confetti-canvas', max: 150, size: 1.2, animate: true };
             const confetti = new ConfettiGenerator(confettiSettings);
             confetti.render();
 
-            // Optional: Stop confetti after 5 seconds
+            // Stop confetti after 5 seconds
             setTimeout(() => {
                 confetti.clear();
             }, 5000);
+        }
+
+        // Celebrate Button Click
+        document.getElementById('celebrate-button').addEventListener('click', function() {
+            triggerConfetti();
         });
+
+        // Timer Update every second
+        setInterval(updateTimer, 1000);  // Update every second
+        updateTimer();  // Initial call
     </script>
 
-    <!-- Canvas for Confetti -->
-    <canvas id="confetti-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+    <canvas id="confetti-canvas"></canvas>
 </body>
 </html>
