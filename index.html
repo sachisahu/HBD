@@ -6,6 +6,10 @@
     <title>Happy Birthday SMP!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/confetti-js/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" href="https://iili.io/2UTz744.jpg" type="image/icon type">
+
+
     <style>
         /* Balloon float animation */
         @keyframes float {
@@ -48,62 +52,6 @@
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
             animation: shimmer 2s linear infinite;
-        }
-
-        /* Dice Timer Styling */
-        .odometer {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            font-size: 3rem;
-            font-weight: bold;
-            color: #F472B6; /* Medium Pink Color */
-        }
-
-        .digit {
-            position: relative;
-            width: 80px;
-            height: 100px;
-            background-color: #F472B6; /* Medium Pink Color */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 10px;
-            transform-style: preserve-3d;
-            perspective: 500px;
-        }
-
-        .digit span {
-            position: absolute;
-            backface-visibility: hidden;
-            font-size: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .digit span.front {
-            transform: rotateX(0deg);
-        }
-
-        .digit span.back {
-            transform: rotateX(180deg);
-        }
-
-        /* Slow Dice Animation */
-        @keyframes rollDice {
-            0% {
-                transform: rotateX(0deg);
-            }
-            100% {
-                transform: rotateX(360deg);
-            }
-        }
-
-        .dice-rotate {
-            animation: rollDice 1s ease-in-out; /* Slower and smoother animation */
         }
 
         /* Image transition */
@@ -160,11 +108,115 @@
             justify-content: center;
             margin-top: 40px;
         }
+
+        /* Show the page content */
+        .page-content {
+            display: none;
+        }
+
+        /* Icon container */
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .icon-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .timer-container {
+            margin-top: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #F472B6;
+        }
+
+        /* Big "Happy Birthday" */
+        .birthday-message {
+            font-size: 4rem;
+            color: #F472B6;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .birthday-message {
+                font-size: 2.5rem;
+            }
+
+            .image-container {
+                width: 120px;
+                height: 120px;
+            }
+
+            .icon-container img {
+                width: 120px;
+                height: 120px;
+            }
+
+            .button {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+
+            .page-content {
+                padding: 2rem;
+            }
+
+            .timer-container {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .birthday-message {
+                font-size: 2rem;
+            }
+
+            .image-container {
+                width: 100px;
+                height: 100px;
+            }
+
+            .icon-container img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .button {
+                font-size: 0.9rem;
+                padding: 6px 14px;
+            }
+
+            .page-content {
+                padding: 1.5rem;
+            }
+
+            .timer-container {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-pink-50 min-h-screen flex items-center justify-center">
 
-    <div class="text-center p-8 rounded-lg shadow-lg bg-white max-w-2xl relative">
+    <!-- Icon Container -->
+    <div class="icon-container" id="icon-container">
+        <img src="https://iili.io/2UTz744.jpg" alt="Birthday Icon" id="icon">
+        <div class="timer-container" id="timer-container">
+            <!-- Timer will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="page-content text-center p-8 rounded-lg shadow-lg bg-white max-w-2xl relative">
         <!-- Balloons -->
         <div class="absolute -top-16 left-8 balloon"></div>
         <div class="absolute -top-24 right-12 balloon"></div>
@@ -178,26 +230,25 @@
             <img src="https://iili.io/2UTz744.jpg" alt="Image 3" class="image-slide visible" id="image1">
             <img src="https://iili.io/2UTC0Xf.jpg" alt="Image 2" class="image-slide" id="image2">
             <img src="https://iili.io/2UTKKwx.jpg" alt="Image 1" class="image-slide" id="image3">
-
-            
         </div>
 
         <!-- Birthday Message -->
-        <h1 class="text-4xl font-bold text-pink-600 mb-4">Happy Birthday, SMP!</h1>
+        <h1 class="birthday-message">Happy Birthday, Smitarani🎉</h1>
         <p class="text-lg text-pink-700 mb-6">Wishing you a day filled with love, laughter, and joy as you celebrate your special day!</p>
-
-        <!-- Odometer Timer -->
-        <div class="mb-6">
-            <p class="text-lg text-pink-600 mb-2">Time left until your birthday:</p>
-            <div id="odometer" class="odometer">
-                <div class="digit" id="hours"></div>
-                <div class="digit" id="minutes"></div>
-                <div class="digit" id="seconds"></div>
-            </div>
-        </div>
 
         <!-- Romantic Wish -->
         <p class="text-md text-pink-600 italic mb-6">“Wishing you a wonderful birthday filled with joy and happiness. Hope you have an amazing year ahead!”</p>
+
+        <!-- Message Section -->
+        <div class="mt-6">
+            <h2 class="text-2xl font-bold text-pink-600 mb-4">Send a Message</h2>
+            <textarea id="message" placeholder="Write your message here" class="w-full p-4 border-2 border-pink-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-pink-500 mb-4" rows="4"></textarea>
+            <button id="sendButton" class="button w-full py-3 text-xl">Send</button>
+
+            <!-- Display sent message -->
+            <div id="messageDisplay" class="mt-6 text-lg text-pink-600 font-semibold"></div>
+        </div>
+
 
         <!-- Celebrate Button -->
         <div class="celebrate-button">
@@ -207,13 +258,65 @@
         </div>
     </div>
 
+    <canvas id="confetti-canvas"></canvas>
+
     <script>
-        // Birthday date setup
+        // Birthday date setup (Scheduled time)
         const birthdayDate = new Date('2025-01-05T00:00:00');
 
-        let lastHour = -1;
-        let lastMinute = -1;
-        let lastSecond = -1;
+        // Update timer to show remaining time in format like "1 hr 34 min 45 sec left"
+        function updateTimer() {
+            const now = new Date();
+            const timeRemaining = birthdayDate - now;
+
+            if (timeRemaining > 0) {
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                let timerString = '';
+                if (hours > 0) {
+                    timerString += `${hours} hr `;
+                }
+                if (minutes > 0 || hours > 0) {
+                    timerString += `${minutes} min `;
+                }
+                timerString += `${seconds} sec left`;
+
+                document.getElementById('timer-container').innerHTML = timerString;
+            } else {
+                document.getElementById('timer-container').innerHTML = "It's your birthday!";
+                triggerConfetti();
+                showPageContent();
+            }
+        }
+
+        // Trigger confetti on birthday
+        function triggerConfetti() {
+            const confettiSettings = { target: 'confetti-canvas', max: 150, size: 1.2, animate: true };
+            const confetti = new ConfettiGenerator(confettiSettings);
+            confetti.render();
+
+            setTimeout(() => {
+                confetti.clear();
+            }, 100000);
+        }
+
+        // Show the page content when birthday hits
+        function showPageContent() {
+            document.getElementById('icon-container').style.display = 'none';
+            document.querySelector('.page-content').style.display = 'block';
+        }
+
+        // Check time and trigger page reveal when it's time
+        const interval = setInterval(function() {
+            updateTimer();
+            const now = new Date();
+            if (now >= birthdayDate) {
+                showPageContent();
+                clearInterval(interval);
+            }
+        }, 1000);
 
         // Image Rotator Logic
         let currentImageIndex = 0;
@@ -226,84 +329,231 @@
         }
 
         setInterval(changeImage, 3500); // Change image every 3.5 seconds
-
-        function formatTime(ms) {
-            const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-            return {
-                hours: hours,
-                minutes: minutes,
-                seconds: seconds
-            };
-        }
-
-        function updateTimer() {
-            const now = new Date();
-            const timeRemaining = birthdayDate - now;
-
-            if (timeRemaining > 0) {
-                const time = formatTime(timeRemaining);
-
-                // Update digits for each unit (hours, minutes, seconds)
-                if (time.hours !== lastHour) {
-                    lastHour = time.hours;
-                    updateDigit("hours", time.hours);
-                }
-
-                if (time.minutes !== lastMinute) {
-                    lastMinute = time.minutes;
-                    updateDigit("minutes", time.minutes);
-                }
-
-                if (time.seconds !== lastSecond) {
-                    lastSecond = time.seconds;
-                    updateDigit("seconds", time.seconds);
-                }
-            } else {
-                document.getElementById('odometer').innerHTML = "It's your birthday!";
-                triggerConfetti();
-            }
-        }
-
-        function updateDigit(id, newValue) {
-            const digitElement = document.getElementById(id);
-            const currentValue = digitElement.textContent || "0";
-
-            if (currentValue !== newValue.toString().padStart(2, '0')) {
-                digitElement.innerHTML = `
-                    <span class="front">${currentValue}</span>
-                    <span class="back">${newValue}</span>
-                `;
-                digitElement.classList.add("dice-rotate");
-                setTimeout(() => {
-                    digitElement.classList.remove("dice-rotate");
-                    digitElement.innerHTML = `<span class="front">${newValue}</span>`;
-                }, 1000);  // Slower Dice flip duration
-            }
-        }
-
-        function triggerConfetti() {
-            const confettiSettings = { target: 'confetti-canvas', max: 150, size: 1.2, animate: true };
-            const confetti = new ConfettiGenerator(confettiSettings);
-            confetti.render();
-
-            // Stop confetti after 5 seconds
-            setTimeout(() => {
-                confetti.clear();
-            }, 5000);
-        }
-
-        // Celebrate Button Click
-        document.getElementById('celebrate-button').addEventListener('click', function() {
-            triggerConfetti();
-        });
-
-        // Timer Update every second
-        setInterval(updateTimer, 1000);  // Update every second
-        updateTimer();  // Initial call
     </script>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+  
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0CQFxV7QieUoXceAgVDm7CDodZP_dIZc",
+      authDomain: "smptracker-77e2e.firebaseapp.com",
+      databaseURL: "https://smptracker-77e2e-default-rtdb.firebaseio.com",
+      projectId: "smptracker-77e2e",
+      storageBucket: "smptracker-77e2e.firebasestorage.app",
+      messagingSenderId: "391227955575",
+      appId: "1:391227955575:web:7575b78e84a41fa25ae972",
+      measurementId: "G-22ZHSV3K3C"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+  
+    // Track page load time
+    const pageLoadTime = new Date().getTime();
+  
+    // Track the user's IP (Use a simple API to get the user's IP)
+    async function getUserIP() {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('Error:', error);
+        return 'Unknown';
+      }
+    }
+  
+    // Function to log data to Firebase
+    function logToFirebase(data) {
+      const userRef = ref(database, 'users/' + Date.now()); // Unique key for each event
+      set(userRef, data);
+    }
+  
+    // Event listener for the "Celebrate Together" button click
+    document.getElementById('celebrate-button').addEventListener('click', async function() {
+      const ip = await getUserIP();
+      const clickTime = new Date().getTime();
+  
+      // Create an object to hold the data
+      const logData = {
+        event: 'Button Clicked',
+        timestamp: clickTime,
+        ipAddress: ip,
+        pageLoadTime: pageLoadTime
+      };
+  
+      // Log the data to Firebase
+      logToFirebase(logData);
+    });
+  
+    // Track time spent on the page
+    window.addEventListener('beforeunload', async function() {
+      const exitTime = new Date().getTime();
+      const timeSpent = exitTime - pageLoadTime;
+  
+      const ip = await getUserIP();
+      
+      // Log the exit event
+      const logData = {
+        event: 'Page Exited',
+        timestamp: exitTime,
+        timeSpent: timeSpent / 1000, // Time spent in seconds
+        ipAddress: ip
+      };
+  
+      logToFirebase(logData);
+    });
+  
+    async function getIPLocation() {
+    try {
+        const response = await fetch('https://ipinfo.io/json?token=8b89270d50865f');
+        const data = await response.json();
+        
+        const userLocation = `${data.city}, ${data.region}, ${data.country}`;
+        
+        // document.getElementById('timer-container').innerHTML += `<br>Location: ${userLocation}`;
 
-    <canvas id="confetti-canvas"></canvas>
+        const userId = Date.now();
+        const userLocationData = {
+            location: userLocation,
+            ip: data.ip,
+            city: data.city,
+            region: data.region,
+            country: data.country,
+            timestamp: new Date().toISOString()
+        };
+
+        const locationRef = ref(database, 'users/' + userId);
+        await set(locationRef, userLocationData);
+
+    } catch (error) {
+        console.error('HBD', error);
+    }
+}
+// Function to save message to Firebase
+
+    getIPLocation();
+    // Function to log device info to Firebase
+    function logDeviceInfo() {
+        // Get the device type (mobile or desktop)
+        let deviceType = /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
+
+        // Get operating system
+        const os = navigator.platform;
+
+        // Get browser information
+        const browser = navigator.userAgent;
+
+        // Get screen size
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // Get device pixel ratio (useful for detecting high-density screens)
+        const devicePixelRatio = window.devicePixelRatio;
+
+        // Get language
+        const language = navigator.language;
+
+        // Get timezone offset (in minutes)
+        const timezone = new Date().getTimezoneOffset();
+
+        // Get battery level (if supported)
+        const batteryLevel = navigator.getBattery ? navigator.getBattery().then(battery => battery.level) : null;
+
+        // Get device memory (if supported)
+        const memory = navigator.deviceMemory || null;
+
+        // Get CPU cores
+        const cpuCores = navigator.hardwareConcurrency;
+
+        // Collect all data
+        const deviceData = {
+        deviceType: deviceType,
+        os: os,
+        browser: browser,
+        screenWidth: screenWidth,
+        screenHeight: screenHeight,
+        devicePixelRatio: devicePixelRatio,
+        language: language,
+        timezone: timezone,
+        batteryLevel: batteryLevel,
+        memory: memory,
+        cpuCores: cpuCores,
+        userAgent: navigator.userAgent,
+        pageLoadTime: window.performance.timing.navigationStart,
+        timestamp: new Date().toISOString() // Capture the timestamp when data is logged
+        };
+
+        // Log this data to Firebase
+        const deviceRef = ref(database, 'devices/' + Date.now()); // Unique key for each log entry
+        set(deviceRef, deviceData)
+        .then(() => {
+            console.log("HBD:");
+        })
+        .catch((error) => {
+            console.error("Error HBD:");
+        });
+    }
+
+    // Call the logDeviceInfo function when the page loads
+    window.addEventListener('load', logDeviceInfo);
+
+
+    document.getElementById("sendButton").addEventListener('click', () => {
+     const message = document.getElementById('message').value;
+
+     if (message.trim() !== "") {
+         const messageData = {
+             message: message,
+             timestamp: new Date().toISOString()
+         };
+
+         // Get a reference to the "messages" node in Firebase
+         const messagesRef = ref(database, 'messages/' + Date.now());
+         set(messagesRef, message)
+             .then(() => {
+                 // Use SweetAlert for success message
+                 Swal.fire({
+                     icon: 'success',
+                     title: 'Message Sent!',
+                     text: 'Your message has been successfully sent.',
+                 });
+
+                 // Display the message on the page
+                 document.getElementById('messageDisplay').innerText = `Your message: ${message}`;
+                        
+                // Clear the message input
+                document.getElementById('message').value = '';
+             })
+             .catch((error) => {
+                 console.error("Error sending message:", error);
+
+                 // Use SweetAlert for error message
+                 Swal.fire({
+                     icon: 'error',
+                     title: 'Oops...',
+                     text: 'There was an error sending your message.',
+                 });
+             });
+     } else {
+         // Use SweetAlert for empty message alert
+         Swal.fire({
+             icon: 'warning',
+             title: 'Input required!',
+             text: 'Please enter a message.',
+         });
+     }
+ });
+
+
+
+    
+</script>
+
+
+  
 </body>
 </html>
